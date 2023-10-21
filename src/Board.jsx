@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Square from "./Square";
 
 function getNextPlayer(squares) {
@@ -8,38 +8,11 @@ function getNextPlayer(squares) {
   return nextPlayer;
 }
 
-function calculateWinner(squares) {
-  const winConditions = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
 
-  for (let i = 0; i < winConditions.length; i++) {
-    const winCondition = winConditions[i];
-    const [a, b, c] = winCondition;
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return `${squares[a]} is winner`;
-    }
-  }
-  const filledSqaures = squares.filter((item) => item === "X" || item === "O");
-  if(filledSqaures.length === 9) {
-    return "No One Won"
-  }
-  return null;
-}
 
-function Board() {
-  const [squares, setSquares] = useState(Array(9).fill(null));
+function Board({squares, winner, onChange}) {
 
   const nextPlayer = getNextPlayer(squares);
-
-  const winner =  calculateWinner(squares);
   
   const status = winner ? winner : `Next player: ${nextPlayer}`;
 
@@ -48,7 +21,7 @@ function Board() {
     if (currentSquare === null && !winner) {
       const newSquares = squares.slice();
       newSquares[index] = nextPlayer;
-      setSquares(newSquares);
+      onChange(newSquares);
     }
   };
 
@@ -70,7 +43,6 @@ function Board() {
         <Square value={squares[7]} index={7} onClick={clickHandler} />
         <Square value={squares[8]} index={8} onClick={clickHandler} />
       </div>
-      <button onClick={() => {setSquares(Array(9).fill(null))}}>Reset Game</button>
     </>
   );
 }
